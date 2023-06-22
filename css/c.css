@@ -1,0 +1,250 @@
+.table {
+    position: absolute;
+    left: 28.5%;
+    top: 26%;
+    width: 43%;
+    height: 50%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  }
+
+  td {
+    padding-left: 10px;
+  }
+
+  .contain {
+    position: absolute;
+    left: 77%;
+    top: 20%;
+    width: 20.5%;
+    height: 100px;
+
+  }
+
+  .containingarrows {
+    position: absolute;
+    left: 77%;
+    top: 40%;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+
+  }
+
+  .icon1:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  
+  }
+
+  ul {
+    max-width: 300px;
+    margin: 50px;
+    font-family: sans-serif;
+
+  }
+
+  ul li {
+    padding: 0 5px 65px 10px;
+    position: relative;
+    margin: 0;
+    cursor: default;
+
+
+  }
+
+  ul li:hover {
+    text-shadow: 0.8px 1px #0f100f99;
+
+
+  }
+
+
+  ul li:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+
+  }
+
+  ul li:before {
+    position: absolute;
+    left: -5.5%;
+    top: 0;
+    content: "";
+    height: 100%;
+    width: 0;
+    border-left: 2px dashed #1e1f1e80;
+
+  }
+
+
+  ul li:last-of-type:before {
+    border: none;
+  }
+
+  #myList {
+    list-style-type: disc;
+  }
+
+  #myList li {
+    display: none;
+    cursor: pointer;
+  }
+
+  #myList li:before {
+    content: "•";
+    margin-right: 10px;
+    position: absolute;
+    left: -20px;
+  }
+
+
+
+  .active {
+    text-shadow: 0.8px 1px black;
+  }
+
+  .search {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 46%;
+    height: 43px;
+    padding: 1px;
+    outline: none;
+    border-radius: 4px;
+    border: 1px solid black;
+    padding-left: 1.5%;
+    font-size: 18px;
+  }
+  
+  .searchbutton {
+    position: absolute;
+    top: 11.5%;
+    right: 28%;
+  }
+  
+  .searchbutton:hover {
+    filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.2));
+  }
+
+  
+.side-bar {
+    /* Set the width and height of the side bar, and fix its position on the page. */
+    width: 25%;
+    height: 100vh;
+    position: fixed;
+    top: 8%;
+    left: 9%;
+    /* Enable vertical scrolling for the menu items. */
+    overflow-y: auto;
+  }
+  
+  
+  
+  .side-bar .menu {
+    /* Position the menu items absolutely, and set the width to match the side bar. */
+    position: absolute;
+    width: 100%;
+  
+    /* Position the menu items in the middle of the side bar. */
+    margin-top: 50%;
+  }
+  
+  .side-bar .menu .item {
+    /* Set the cursor to a pointer to indicate that the items are clickable. */
+    position: relative;
+    cursor: pointer;
+  }
+  
+  
+  
+  
+  .side-bar .menu .item a {
+    /* Remove the default underline from links and set the font size and family. */
+    text-decoration: none;
+    font-size: 18px;
+    color: #000000;
+    font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+  
+    /* Use block-level display and padding to style the menu items as clickable buttons. */
+    display: block;
+    padding: 5px 30px;
+    line-height: 40px;
+  }
+  
+  .side-bar .menu .item a:hover {
+    /* Add a shadow effect to the text on hover. */
+    text-shadow: 1.1px 1.1px #b2b3b3;
+  
+    /* Add a smooth transition to the hover effect. */
+    transition: 0.3s ease;
+  }
+
+  
+.settings-copy {
+    position: absolute;
+    left: 45%;
+    top: 92%;
+  }
+  
+  
+  .settings-copy:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  }
+  
+  
+  .settings {
+    position: absolute;
+    left: 50%;
+    top: 92%;
+  }
+  
+  .settings:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  }
+  
+  
+  .log-out-copy {
+    position: absolute;
+    left: 60%;
+    top: 92%;
+  }
+  
+  .log-out-copy:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  }
+
+  
+hr {
+    position: absolute;
+    width: 30%;
+    left: 35%;
+    top: 85%;
+  }
+  
+  
+  .home {
+    position: absolute;
+    left: 40%;
+    top: 92%;
+  
+  
+  }
+  
+  .home:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+  }
+  
+  .latest-address {
+    position: absolute;
+    width: 30%;
+    left: 35%;
+    top: 80%;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+  
+  
+  }

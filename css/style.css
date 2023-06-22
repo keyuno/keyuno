@@ -1,0 +1,810 @@
+#pass {
+  font-size: 1.3vw;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: 3vw;
+  padding: 1px;
+  box-shadow: 2px 5px black;
+  font-family: 'Times New Roman', 'Arial';
+  text-align: center;
+  outline: none;
+}
+
+
+.login {
+  background-color: white;
+  border: none;
+  color: black;
+  font-family: 'Georgia', 'Times New Roman';
+  font-size: 18px;
+  padding: 1.8vh 3.2vw;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.login:hover {
+  box-shadow: 2px 2px 5px #9d9c9b;
+}
+
+
+.login:active {
+  box-shadow: none;
+}
+
+.search {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 46%;
+  height: 43px;
+  padding: 1px;
+  outline: none;
+  border-radius: 4px;
+  border: 1px solid black;
+  padding-left: 1.5%;
+  font-size: 18px;
+}
+
+.searchbutton {
+  position: absolute;
+  top: 11.5%;
+  right: 28%;
+}
+
+.searchbutton:hover {
+  filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.2));
+}
+
+.wallet {
+  position: absolute;
+  left: 36%;
+  top: 22%;
+}
+
+.wallet:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+.knowledge {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+}
+
+.knowledge:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+.create {
+  position: absolute;
+  left: 63%;
+  top: 22%;
+}
+
+.create:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+
+.latest-address {
+  position: absolute;
+  width: 30%;
+  left: 35%;
+  top: 80%;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+
+
+}
+
+.send-address {
+  position: absolute;
+  width: 30%;
+  left: 35%;
+  top: 80%;
+  text-align: center;
+  font-size: 16px;
+
+
+}
+
+hr {
+  position: absolute;
+  width: 30%;
+  left: 35%;
+  top: 85%;
+}
+
+
+.home {
+  position: absolute;
+  left: 40%;
+  top: 92%;
+
+
+}
+
+.home:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+.log-out {
+  position: absolute;
+  left: 55%;
+  top: 92%;
+}
+
+
+.log-out:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+.settings-copy {
+  position: absolute;
+  left: 45%;
+  top: 92%;
+}
+
+
+.settings-copy:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+
+.settings {
+  position: absolute;
+  left: 50%;
+  top: 92%;
+}
+
+.settings:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+
+.log-out-copy {
+  position: absolute;
+  left: 60%;
+  top: 92%;
+}
+
+.log-out-copy:hover {
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+
+li {
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 20%;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  margin: 0 5px;
+  cursor: pointer;
+
+}
+
+li.active {
+  background-color: black;
+}
+
+
+.overlay {
+  position: absolute;
+  top: 27%;
+  left: 28%;
+  border: none;
+  overflow: hidden;
+  width: 44%;
+  height: 42%;
+  z-index: -1;
+  cursor: pointer;
+  box-shadow: none;
+  border-radius: 10px;
+
+}
+
+
+
+a.overlay:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 10px;
+}
+
+iframe {
+  position: absolute;
+  top: 27%;
+  left: 28%;
+  border: none;
+  overflow: hidden;
+  width: 44%;
+  height: 42%;
+  border: 0.1px solid black;
+  z-index: 0;
+  border-radius: 10px;
+  background: white;
+  pointer-events: none;
+}
+
+
+
+.slideshow {
+  position: absolute;
+  margin: 40% auto;
+  width: 50%;
+  top: 0;
+  left: 66.8%;
+  transform: translate(-50%, -50%);
+
+
+}
+
+.side-bar {
+  /* Set the width and height of the side bar, and fix its position on the page. */
+  width: 25%;
+  height: 100vh;
+  position: fixed;
+  top: 8%;
+  left: 9%;
+  /* Enable vertical scrolling for the menu items. */
+  overflow-y: auto;
+}
+
+
+
+.side-bar .menu {
+  /* Position the menu items absolutely, and set the width to match the side bar. */
+  position: absolute;
+  width: 100%;
+
+  /* Position the menu items in the middle of the side bar. */
+  margin-top: 50%;
+}
+
+.side-bar .menu .item {
+  /* Set the cursor to a pointer to indicate that the items are clickable. */
+  position: relative;
+  cursor: pointer;
+}
+
+
+
+
+.side-bar .menu .item a {
+  /* Remove the default underline from links and set the font size and family. */
+  text-decoration: none;
+  font-size: 18px;
+  color: #000000;
+  font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+
+  /* Use block-level display and padding to style the menu items as clickable buttons. */
+  display: block;
+  padding: 5px 30px;
+  line-height: 40px;
+}
+
+.side-bar .menu .item a:hover {
+  /* Add a shadow effect to the text on hover. */
+  text-shadow: 1.1px 1.1px #b2b3b3;
+
+  /* Add a smooth transition to the hover effect. */
+  transition: 0.3s ease;
+}
+
+
+
+.bitcoin {
+  position: absolute;
+  left: 80%;
+  top: 35%;
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  width: 10%;
+
+
+}
+
+.xcp {
+  position: absolute;
+  left: 80%;
+  top: 40%;
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  width: 10%;
+
+
+}
+
+.umok {
+  position: absolute;
+  left: 80%;
+  top: 45%;
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  width: 10%;
+
+
+}
+
+
+.NFT {
+  position: absolute;
+  left: 30%;
+  top: 40%;
+  padding-bottom: 10px;
+
+
+}
+
+.desc {
+  position: absolute;
+  left: 30%;
+  top: 45%;
+  padding-bottom: 10px;
+
+
+}
+
+.update {
+  position: absolute;
+  left: 30%;
+  top: 28%;
+  padding-bottom: 10px;
+
+
+}
+
+.createnft {
+  position: absolute;
+  left: 30%;
+  top: 28%;
+  padding-bottom: 10px;
+
+
+}
+
+.btctoolow {
+  position: absolute;
+  left: 37%;
+  top: 83%;
+  padding-bottom: 10px;
+
+
+}
+
+#mynetwork {
+  position: absolute;
+  width: 90vw;
+  height: 60vh;
+  margin-top: 10%;
+  margin-left: 4%;
+
+}
+
+.wrapper {
+  position: absolute;
+  top: 33%;
+  left: 37%;
+  width: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.nftid {
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: #3b3b3b30;
+  font-size: 16px;
+  width: 50%;
+  height: 10%;
+  text-align: left;
+  line-height: 10%;
+  padding-bottom: 0.4%;
+}
+
+.nftid:focus {
+  border-color: black;
+}
+
+.nftid:disabled {
+  background-color: transparent;
+}
+
+.links {
+  position: absolute;
+  top: 30%;
+  left: 41%;
+}
+
+.link {
+  color: black;
+  text-decoration: none;
+  font-size: 16px;
+
+}
+
+
+.links span {
+  padding: 0 10px;
+}
+
+.links a {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.links a:hover {
+  text-shadow: 0 0 0.1px #000;
+}
+
+label {
+  float: left;
+  padding-right: 2%;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 1%;
+
+}
+
+
+.description {
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: #3b3b3b30;
+  font-size: 22px;
+  width: 80%;
+  line-height: 5%;
+  padding-bottom: 0.4%;
+
+}
+
+.description:focus {
+  border-color: black;
+}
+
+.create-button {
+  position: absolute;
+  bottom: 20%;
+  left: 46.8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: black;
+  font-family: 'Georgia', 'Times New Roman';
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  box-shadow: 0px 0px 6px grey;
+  transition: box-shadow 0.2s ease-in-out;
+  width: 100px;
+  height: 40px;
+
+}
+
+
+
+.create-button:hover {
+  box-shadow: 0px 0px 12px grey;
+  cursor: pointer;
+}
+
+.create-button:active {
+  box-shadow: none;
+}
+
+.count {
+  position: absolute;
+  top: 100%;
+  left: 91%;
+
+}
+
+.qrcode {
+  position: absolute;
+  left: 64%;
+  width: 8%;
+  top: 58%;
+  transform: translateY(-50%);
+
+}
+
+
+.btc-balance {
+  position: absolute;
+  left: 31.8%;
+  top: 52.8%;
+  font-size: 16px;
+
+  transform: translateY(-50%);
+
+}
+
+label[for=btc-balance] {
+  position: absolute;
+  top: 51%;
+  left: 29%;
+  font-size: 16px;
+
+  transform: translateY(-50%);
+}
+
+.xcp-balance {
+  position: absolute;
+  left: 31.8%;
+  top: 58.5%;
+  font-size: 16px;
+
+  transform: translateY(-50%);
+
+}
+
+label[for=xcp-balance] {
+  position: absolute;
+  top: 56.5%;
+  left: 29%;
+  font-size: 16px;
+
+  transform: translateY(-50%);
+}
+
+.create-address {
+  position: absolute;
+  left: 34%;
+  top: 63.8%;
+  font-size: 16px;
+  padding: 9px;
+  transform: translateY(-50%);
+
+}
+
+label[for=create-address] {
+  position: absolute;
+  top: 62%;
+  left: 29%;
+  font-size: 16px;
+
+  transform: translateY(-50%);
+}
+
+.box {
+  position: absolute;
+  top: 25%;
+  left: 76%;
+  width: 18%;
+  height: 5%;
+  padding: 10px;
+  word-wrap: normal;
+}
+
+
+#text {
+  font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.typewriter p {
+  animation: typing 1s steps(30, end) linear;
+  white-space: pre-wrap;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+@keyframes typing {
+  from {
+    width: 0
+  }
+
+  to {
+    width: 100%
+  }
+}
+
+
+.box2 {
+  position: absolute;
+  top: 47%;
+  left: 76%;
+  width: 18%;
+  height: 5%;
+  padding: 10px;
+  word-wrap: normal;
+}
+
+#unconfirmed2 {
+  font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+#unconfirmed {
+  font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+#process {
+  position: absolute;
+  top: 87%;
+  left: 90%;
+  font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+
+.icon {
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(100px 100px 100px rgba(211, 63, 63, 0.7));
+  animation: shadow-pulse 4.5s ease-out infinite, pulsate 4.5s ease-out infinite;
+
+}
+
+@keyframes shadow-pulse {
+  0% {
+    filter: drop-shadow(0 10px 10px rgba(214, 11, 204, 0.7));
+  }
+
+  50% {
+    filter: drop-shadow(10px 20px 40px rgba(237, 4, 4, 0));
+  }
+
+  100% {
+    filter: drop-shadow(0 0 10px rgba(190, 70, 170, 0.7));
+  }
+}
+
+@keyframes pulsate {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+#tab-bar {
+  position: absolute;
+  top: 20%;
+  left: 39%;
+
+
+}
+
+button {
+  background-color: white;
+  border: none;
+  margin: 6px;
+  border-radius: 10%;
+  width: 70px;
+  height: 30px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  color: rgb(135, 134, 135);
+  text-align: center;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+
+}
+
+button:hover {
+  box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.12);
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.32);
+}
+
+
+.active-tab {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+
+
+}
+
+
+#my-form {
+  display: flex;
+  position: absolute;
+  top: 35%;
+  left: 30%;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+label {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.form-input {
+  padding: 5px;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid gray;
+  width: 600px;
+  outline: none;
+}
+
+.form-input:focus,
+.form-input:active {
+  border-bottom: 2px solid black;
+}
+
+
+.box1 {
+  position: absolute;
+  top: 29.5%;
+  left: 78%;
+  width: 18%;
+  height: 5%;
+  padding: 10px;
+  word-wrap: normal;
+}
+
+
+#text1 {
+  font-family: 'Trebuchet', 'Times New Roman', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.send-button {
+  position: absolute;
+  bottom: 24%;
+  left: 47%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: black;
+  font-family: 'Georgia', 'Times New Roman';
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  box-shadow: 0px 0px 6px grey;
+  transition: box-shadow 0.2s ease-in-out;
+  width: 100px;
+  height: 40px;
+
+}
+
+
+.send-button:hover {
+  box-shadow: 0px 0px 12px grey;
+  cursor: pointer;
+}
+
+.send-button:active {
+  box-shadow: none;
+}
