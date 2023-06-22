@@ -1,9 +1,9 @@
-# keyuno: Event Economy Desktop App <img style="float: right;" src="css\img\keyuno.jpg">
+# keyuno: Event Economy Desktop App
 
 
 **Note: This is a test version only for developers. Take necessary precautions and be aware of the risks involved.**
 
-
+ <img style="float: right;" src="css\img\keyuno.jpg">
 
 keyuno an Electron JS application that enables users to view, create, and send digital objects (1/1 Bitcoin NFTs) using the Counterparty XCP platform. It offers IPFS support, and includes a map of knowledge that facilitates exploration of the connections between digital objects.
 
