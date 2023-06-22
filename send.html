@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <title>keyuno v0.1.0</title>
+    <link rel="stylesheet" href="css\style.css">
+
+    <script type="text/javascript" src="js\settings.js" ></script>
+    <script type="text/javascript" src="js\recieve.js" ></script>
+
+    <script src="js/search.js"></script>
+    <script src="js/qrcodejs/qrcode.js"></script>
+    <script src="js/passphrase.js"></script>
+    <script src="js/jquery-3.6.3.min.js"></script>
+    <script src="js/script.js" ></script>
+
+
+    <script type="text/javascript" src="node_modules/moment/moment.js"></script>
+    <script type="text/javascript" src="node_modules/numeral/numeral.js"></script>
+    <script type="text/javascript" src="node_modules/@bassettsj/livestamp/livestamp.js"></script>
+    <script type="text/javascript" src="node_modules/async/dist/async.min.js"></script>
+    <script type="text/javascript" src="node_modules/crypto-js/crypto-js.js"></script>
+
+    <script type="text/javascript" src="transfer/js/throttle-debounce-fn.min.js"></script>
+    <script type="text/javascript" src="transfer/js/jquery.base64.js"></script>
+    <script type="text/javascript" src="transfer/js/mnemonic.js"></script>
+    <script type="text/javascript" src="transfer/js/sanitizer.js"></script>
+    <script type="text/javascript" src="transfer/js/buffer.min.js"></script>
+    <script type="text/javascript" src="transfer/js/bip39.min.js"></script>
+
+    <script type="text/javascript" src="transfer/js/bitcoinjs-lib.min.js"></script>
+    <script type="text/javascript" src="transfer/js/bitcore-lib.min.js"></script>
+    <script type="text/javascript" src="transfer/js/bitcore-message.min.js"></script>
+    <script type="text/javascript" src="transfer/js/util.bitcore.js"></script>
+    <script type="text/javascript" src="transfer/js/util.generic.js"></script>
+
+    <script src="js/xcp-js/transactions.js" ></script>
+
+    <script type="text/javascript" src="transfer/transferownership.js"></script>
+
+
+
+
+</head>
+<body>
+ 
+  
+        <!-- Side bar -->
+
+        <div class="side-bar">
+          <div class="menu">
+            <div class="item"><a href="balance.html">BALANCE</a></div>
+            <div class="item"><a href="send.html" onclick="location.reload();"><b>SEND</b></a></div>
+
+            <div class="item"><a href="#">HISTORY</a></div>
+          </div>
+        </div>
+
+        <!-- Balance buttons -->
+
+        <div id="tab-bar">
+          <button id="btc-btn">BTC</button>
+          <button id="xcp-btn">XCP</button>
+          <button id="umok-btn">UMOK</button>
+          <button id="nft-btn">NFT</button>
+        </div>
+
+        <!-- Search Map of Knowledge -->
+
+        <input type="text" class="search" placeholder="Search" id="search-input">        
+        <div class="searchbutton">
+          <a href="#" onclick="searchURL();">
+            <img src="css\icons\search.svg" alt="">
+          </a>
+        </div>
+
+        <div class="send-address">
+
+          <p><b>Address: </b><span class="address1" onclick="yourAddress()" style="cursor: pointer;"></span></p>
+
+        </div>
+
+        <button class="send-button" id="send-button" onclick="validateInputAndSend()">SEND</button>
+
+
+  <div class="box1">
+      <p id="text1"></p>
+    </div>
+  </div>
+        <script>
+        function searchURL() {
+      const searchTerm = document.querySelector('#search-input').value.toLowerCase();
+      window.open(`map.html?search=${searchTerm}`, '_self');
+    
+      // Add event listener for when the map.html page finishes loading
+      window.addEventListener('load', function() {
+        // Call the searchURL function in the search.js file
+        searchURL();
+      });
+    }
+    
+      // add event listener for keydown event on text input
+      document.querySelector('#search-input').addEventListener('keydown', function(event) {
+        // check if key pressed was Enter
+        if (event.key === 'Enter') {
+          // call searchURL function
+          searchURL();
+        }
+      });
+
+   
+        </script>
+      
+        <script>
+
+
+    
+
+          // Transaction Fee
+          let TX_FEE = localStorage.getItem("TX_FEE") || 0.00003;
+          let MIN_BTC = (parseFloat(TX_FEE) * 4).toFixed(5);
+
+
+          const btcBtn = document.getElementById("btc-btn");
+          const xcpBtn = document.getElementById("xcp-btn");
+          const umokBtn = document.getElementById("umok-btn");
+          const nftBtn = document.getElementById("nft-btn");
+          
+          btcBtn.addEventListener("click", function() {
+            xcpBtn.classList.remove("active-tab");
+            umokBtn.classList.remove("active-tab");
+            nftBtn.classList.remove("active-tab");
+            btcBtn.classList.add("active-tab");
+            window.location.href = "send copy.html";
+
+          });
+          
+          xcpBtn.addEventListener("click", function() {
+            btcBtn.classList.remove("active-tab");
+            umokBtn.classList.remove("active-tab");
+            nftBtn.classList.remove("active-tab");
+            xcpBtn.classList.add("active-tab");
+          });
+          
+          umokBtn.addEventListener("click", function() {
+            btcBtn.classList.remove("active-tab");
+            xcpBtn.classList.remove("active-tab");
+            nftBtn.classList.remove("active-tab");
+            umokBtn.classList.add("active-tab");
+          });
+          
+          nftBtn.addEventListener("click", function() {
+            
+            btcBtn.classList.remove("active-tab");
+            xcpBtn.classList.remove("active-tab");
+            umokBtn.classList.remove("active-tab");
+            nftBtn.classList.add("active-tab");
+
+          });
+
+          var address = localStorage.getItem('youraddress');
+          const text = document.getElementById("text1");
+
+          async function getFirstNFT() {
+  try {
+    const response = await fetch(`https://xchain.io/api/issuances/${address}`);
+    const data = await response.json();
+
+    if (!data || !data.data || !data.data.length) {
+      console.log('No data available');
+      text.textContent = `No NFT available to send.`;
+
+      return false;
+    }
+
+    const sortedEntries = data.data.sort((a, b) => a.timestamp - b.timestamp);
+    const firstAsset = sortedEntries.find(entry => entry.quantity === "1");
+
+    if (firstAsset) {
+      console.log(`Asset with quantity 1 for address ${address}: ${firstAsset.asset}`);
+
+      const broadcastResponse = await fetch(`https://xchain.io/api/broadcasts/${address}`);
+      const broadcastData = await broadcastResponse.json();
+
+      if (!broadcastData || !broadcastData.data || broadcastData.data.length === 0 || (broadcastData.data[0].text.substring(0,2) !== 'Qm' || broadcastData.data[0].text.length !== 46)) {
+        console.log('No data available');
+        text.textContent = `No NFT available to send.`;
+
+        return false;
+      }
+
+      console.log(`Broadcast available for asset with quantity 1: ${firstAsset.asset}`);
+      console.log('Success!');
+
+      document.getElementById("nft-id").value = firstAsset.asset;
+      document.getElementById("description").value = firstAsset.description;
+      text.textContent = `In order to send an NFT, you must have a minimum balance of ${MIN_BTC} BTC. Be aware that by sending an NFT, you are also transferring ownership of the NFT to the recipient's address.`;
+
+      return true;
+    } 
+  } catch (error) {
+    console.error(`Error fetching data: ${error}`);
+    return false;
+  }
+}
+       nftBtn.addEventListener("click", getFirstNFT);
+
+         document.querySelector('.address1').innerText = address;
+
+         async function myBalance() {
+  try {
+    const nftFound = await getFirstNFT();
+
+    if (!nftFound) {
+      console.log('No NFT available');
+      text.textContent = `No NFT available to send.`;
+      return;
+    }
+
+    console.log("Fetching BTC balance...");
+    try {
+      const response = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}/balance`);
+const data = await response.json();
+
+const balance_BTC = parseFloat((data.balance / 100000000).toFixed(5));
+console.log("BTC balance:", balance_BTC);
+
+if (balance_BTC < MIN_BTC) {
+  text.textContent = `Not enough BTC in your balance. Minimum required balance: ${MIN_BTC} BTC.`;
+  return; 
+
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+    const assetId = document.getElementById('nft-id');
+   
+
+
+    // Check BTC address
+    async function validateInputAndSend() {
+
+
+       // Disable the button
+  document.getElementById('send-button').disabled = true;
+
+  // Wait for 10 seconds
+  setTimeout(() => {
+    // Enable the button and update text1
+    document.getElementById('send-button').disabled = false;
+
+  }, 10000);
+
+  const sendToInput = document.getElementById('send-to');
+  const sendTo = sendToInput.value;
+  if (sendTo.length >= 26 && sendTo.length <= 34 && sendTo[0] === "1") {
+    try {
+      await myBalance();
+      handleConfirmation();
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    // The input is not valid, display an error message
+    console.log("Invalid BTC address");
+    text.textContent = "Invalid BTC address. Please wait 10 seconds between sending requests.";
+  }
+}
+
+
+   function handleConfirmation() {
+    var vals = {
+    source: localStorage.getItem('youraddress'),
+    name: document.getElementById('nft-id').value,
+    destination: document.getElementById('send-to').value
+  };
+  
+  var network = (FW.WALLET_NETWORK == 2) ? 'testnet' : 'mainnet';
+  var fee_sat = TX_FEE;
+  var info = FW.ASSET_INFO;
+
+
+  
+async function checkTransactionStatus() {
+  const address = localStorage.getItem('youraddress');
+  try {
+    const response = await fetch(`https://xchain.io/api/mempool/${address}`);
+    const data = await response.json();
+ 
+    if (data && Array.isArray(data.data) && data.data.length > 0) {
+    const txs = data.data.filter(tx => tx.tx_type === 'Issuance');
+  if (txs.length > 0) {
+    text1.textContent = `Sending NFT, please wait.`;
+    //Start send function here.
+  } else {
+     text1.textContent = "Something went wrong, please try again later.";
+  }
+  } 
+
+  } catch (error) {
+    console.error(error);
+    text1.textContent = "Something went wrong, please try again later.";
+  }
+}
+
+
+  fetch(`https://xchain.io/api/asset/${vals.name}`)
+    .then(response => response.json())
+    .then(assetData => {
+      if (!assetData || assetData.owner !== vals.source) {
+        console.log('You do not own this asset');
+        text1.textContent = `You do not have permission to transfer ownership. Asset registered to other address.`;
+        return false;
+      }
+
+        text1.textContent = `Processing. . .`;
+
+      cpIssuance(network, vals.source, vals.name, 0, info.divisible, info.description, vals.destination, fee_sat);
+
+      setTimeout(checkTransactionStatus, 5000);
+    })
+}
+
+
+// Prepare for NFT ownership transfer when clicked on NFT button.
+createWallet();
+
+
+// Send transaction
+
+
+          </script>
+
+
+</head>
+<body>
+
+
+
+  <form id="my-form">
+    <label for="send-to">SEND TO:</label>
+    <input type="text" id="send-to" name="send-to" class="form-input" required>
+  
+    <label for="nft-id">NFT ID:</label>
+    <input type="text" id="nft-id" name="nft-id" class="form-input" required readonly>
+  
+    <label for="description">DESCRIPTION:</label>
+    <input type="text" id="description" name="description" class="form-input" required readonly>
+  </form>
+  
+
+
+  <hr>
+
+  <div class="log-out-copy">
+    <a href="index.html" onclick="localStorage.clear();">
+      <img src="css\icons\logout.svg" alt="Log Out" title="Log Out">
+    </a>
+  </div>
+
+  <div class="settings">
+    <a href="#" onclick="openSettings()">
+      <img src="css\icons\setting.svg" alt="Settings" title="Settings">
+    </a>
+  </div>
+  
+  
+  
+  <div class="home">
+      
+    <a href="home.html">
+        <img src="css\icons\home.svg" alt="Home" title="Home">
+      </a>
+    </div>
+ 
+
+</body>
+</html>
+
+

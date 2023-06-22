@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <title>keyuno v0.1.0</title>
+
+
+  <script src="js/jquery-3.6.3.min.js"></script>
+
+  <script type="text/javascript" src="js/settings.js"></script>
+  <script type="text/javascript" src="js/recieve.js"></script>
+
+  <script src="js/search.js"></script>
+
+
+
+  <script src="js/lib/mnemonic-1.1.0.js"></script>
+  <script src="js/lib/aes.js"></script>
+  <script src="js/lib/biginteger.js"></script>
+  <script src="js/xcp-js/util.js"></script>
+  <script src="js/xcp-js/transact.js"></script>
+  <script src="js/xcp-js/issuance.js"></script>
+  <script src="js/lib/lozad.min.js"></script>
+  <script src="js/lib/buffer.js"></script>
+  <script src="js/lib/bitcoinjs-lib.js"></script>
+  <script src="js/lib/bitcoinjs-message.js"></script>
+  <script src="js/xcp-js/bitcore/bitcore.min.js"></script>
+
+  <script src="js/btc.js"></script>
+  <script src="js/passphrase.js"></script>
+  <script src="js/script1.js"></script>
+
+
+
+  <link rel="stylesheet" href="css\style.css">
+
+</head>
+
+<body>
+
+
+  <form id="my-form">
+    <label for="send-to">SEND TO:</label>
+    <input type="text" id="send-to" name="send-to" class="form-input"
+      placeholder="Click to paste address from clipboard" required>
+
+    <label for="nft-id">NFT ID:</label>
+    <input type="text" id="nft-id" name="nft-id" class="form-input" required readonly>
+
+    <label for="description">DESCRIPTION:</label>
+    <input type="text" id="description" name="description" class="form-input" required readonly>
+  </form>
+
+
+
+  <script>
+    const sendToInput = document.getElementById('send-to');
+
+    sendToInput.addEventListener('click', () => {
+      navigator.clipboard.readText()
+        .then(text => {
+          sendToInput.value = text;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  </script>
+
+
+
+
+
+  <!-- Side bar -->
+
+  <div class="side-bar">
+    <div class="menu">
+      <div class="item"><a href="balance.html">BALANCE</a></div>
+      <div class="item"><a href="send.html" onclick="location.reload();"><b>SEND</b></a></div>
+
+      <div class="item"><a href="history.html">HISTORY</a></div>
+    </div>
+  </div>
+
+  <!-- Balance buttons -->
+
+  <div id="tab-bar">
+    <button id="btc-btn">BTC</button>
+    <button id="xcp-btn">XCP</button>
+    <button id="umok-btn">UMOK</button>
+    <button id="nft-btn">NFT</button>
+  </div>
+
+  <!-- Search Map of Knowledge -->
+
+  <input type="text" class="search" placeholder="Search" id="search-input">
+  <div class="searchbutton">
+    <a href="#" onclick="searchURL();">
+      <img src="css\icons\search.svg" alt="">
+    </a>
+  </div>
+
+
+  <div class="send-address">
+
+    <p><b>Address: </b><span class="address1" onclick="yourAddress()" style="cursor: pointer;"></span></p>
+
+  </div>
+
+  <button class="send-button" id="send-button">SEND</button>
+
+
+  <div class="box1">
+    <p id="text1"></p>
+  </div>
+  </div>
+  <script>
+    function searchURL() {
+      const searchTerm = document.querySelector('#search-input').value.toLowerCase();
+      window.open(`map.html?search=${searchTerm}`, '_self');
+
+      // Add event listener for when the map.html page finishes loading
+      window.addEventListener('load', function () {
+        // Call the searchURL function in the search.js file
+        searchURL();
+      });
+    }
+
+    // add event listener for keydown event on text input
+    document.querySelector('#search-input').addEventListener('keydown', function (event) {
+      // check if key pressed was Enter
+      if (event.key === 'Enter') {
+        // call searchURL function
+        searchURL();
+      }
+    });
+  </script>
+
+  <script>
+    let TX_FEE = localStorage.getItem("TX_FEE") || 0.00003;
+    let MIN_BTC = (parseFloat(TX_FEE) * 4).toFixed(5);
+    var address = localStorage.getItem('youraddress');
+    document.querySelector('.address1').innerText = address;
+
+
+    const btcBtn = document.getElementById("btc-btn");
+    const xcpBtn = document.getElementById("xcp-btn");
+    const umokBtn = document.getElementById("umok-btn");
+    const nftBtn = document.getElementById("nft-btn");
+
+    nftBtn.classList.add("active-tab");
+
+
+    btcBtn.addEventListener("click", function () {
+      xcpBtn.classList.remove("active-tab");
+      umokBtn.classList.remove("active-tab");
+      nftBtn.classList.remove("active-tab");
+      btcBtn.classList.add("active-tab");
+      window.location.href = "sendbtc.html";
+
+    });
+
+    xcpBtn.addEventListener("click", function () {
+      btcBtn.classList.remove("active-tab");
+      umokBtn.classList.remove("active-tab");
+      nftBtn.classList.remove("active-tab");
+      xcpBtn.classList.add("active-tab");
+      window.location.href = "sendxcp.html";
+
+    });
+
+    umokBtn.addEventListener("click", function () {
+      btcBtn.classList.remove("active-tab");
+      xcpBtn.classList.remove("active-tab");
+      nftBtn.classList.remove("active-tab");
+      umokBtn.classList.add("active-tab");
+      window.location.href = "sendumok.html";
+
+    });
+
+    nftBtn.addEventListener("click", function () {
+
+      btcBtn.classList.remove("active-tab");
+      xcpBtn.classList.remove("active-tab");
+      umokBtn.classList.remove("active-tab");
+      nftBtn.classList.add("active-tab");
+
+    });
+
+    const text = document.getElementById("text1");
+
+    function displayFormData() {
+      const sendTo = localStorage.getItem('SendTo');
+      const nftId = localStorage.getItem('NFTID');
+      const description = localStorage.getItem('Description');
+
+      document.getElementById('send-to').value = sendTo;
+      document.getElementById('nft-id').value = nftId;
+      document.getElementById('description').value = description;
+    }
+
+    displayFormData()
+
+
+    function sendXCPTransaction() {
+      const add_from = localStorage.getItem('youraddress');
+      const add_to = localStorage.getItem('SendTo').toString();
+      const asset = localStorage.getItem('NFTID').toString();
+      const asset_total = "1";
+      const btc_total = "0.00005470";
+      const transfee = TX_FEE;
+      const mnemonic = localStorage.getItem('passphrase');
+
+      sendXCP_opreturn_blockchaininfo(add_from, add_to, asset, asset_total, btc_total, transfee, mnemonic);
+      console.log("Sending Transaction");
+      text.textContent = "Sending transaction. Please wait.";
+
+      setTimeout(validateAndSendBroadcast, 10000);
+
+    }
+
+
+    sendXCPTransaction();
+
+
+    function validateAndSendBroadcast() {
+      var bcText = " ";
+      var bcValue = 0;
+      var bcFeeFraction = 0;
+      const transfee = TX_FEE;
+      var decrypted = localStorage.getItem('passphrase');
+      sendBroadcast_opreturn_blockchaininfo(address, bcText, bcValue, bcFeeFraction, TX_FEE, decrypted);
+      console.log("Sending Broadcast");
+      text.textContent = "Broadcasting. Please wait.";
+      setTimeout(checkMempool, 10000); // Delay of 10 seconds before calling checkMempool
+    }
+
+    async function checkMempool() {
+      var address = localStorage.getItem('youraddress');
+      const response = await fetch(`https://xchain.io/api/mempool/${address}`);
+      const data = await response.json();
+      const isMempoolEmpty = data.data.length === 0;
+      if (!isMempoolEmpty) {
+        console.log("Mempool is not empty. Checking again in 1 minute...");
+        setTimeout(checkMempool, 60000);
+
+      } else {
+        console.log("Mempool is empty. ");
+        text.textContent = "Success. Transaction complete.";
+        document.getElementById("my-form").reset();
+        localStorage.removeItem('Description');
+        localStorage.removeItem('SendTo');
+        localStorage.removeItem('NFTID');
+
+      }
+    }
+  </script>
+</body>
+
+
+<hr>
+
+<div class="log-out-copy">
+  <a href="index.html" onclick="localStorage.clear();">
+    <img src="css\icons\logout.svg" alt="Log Out" title="Log Out">
+  </a>
+</div>
+
+<div class="settings">
+  <a href="#" onclick="openSettings()">
+    <img src="css\icons\setting.svg" alt="Settings" title="Settings">
+  </a>
+</div>
+
+
+
+<div class="home">
+
+  <a href="home.html">
+    <img src="css\icons\home.svg" alt="Home" title="Home">
+  </a>
+</div>
+
+</html>

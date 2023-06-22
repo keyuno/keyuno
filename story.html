@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <script src="js/jquery-3.6.3.min.js"></script>
+
+  <script type="text/javascript" src="js\settings.js"></script>
+
+  <link href="node_modules/summernote/dist/summernote-lite.css" rel="stylesheet">
+  <script src="node_modules/summernote/dist/summernote-lite.js"></script>
+  <link rel="stylesheet" href="css\style.css">
+
+  <title>keyuno v0.1.0</title>
+
+</head>
+
+<body>
+
+  <div id="summernote"></div>
+  <div class="preview" ng-show="item == 'preview'">
+
+    <button class="create-button" onclick="saveAndSend()">DONE</button>
+
+
+    <script>
+      $('#summernote').summernote({
+
+        toolbar: [
+          ['style', ['style']],
+          ['fontsize', ['fontsize']],
+          ['font', ['bold', 'underline']],
+        ],
+        height: 500, // set editor height
+        minHeight: null, // set minimum height of editor
+        maxHeight: null, // set maximum height of editor
+        focus: true
+
+      });
+
+      var filePath = "filename.html"
+
+      function saveAndSend() {
+        var markupStr = $('#summernote').summernote('code');
+        window.fs.writeFile(filePath, markupStr, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("File successfully saved to disk.");
+          window.ipcRenderer.send('my-message', 'some data');
+          location.href = "loading.html";
+        });
+      }
+    </script>
+
+
+
+    <hr>
+
+    <div class="log-out-copy">
+      <a href="index.html" onclick="localStorage.clear();">
+        <img src="css\icons\logout.svg" alt="Log Out" title="Log Out">
+      </a>
+    </div>
+
+    <div class="settings">
+      <a href="#" onclick="openSettings()">
+        <img src="css\icons\setting.svg" alt="Settings" title="Settings">
+      </a>
+    </div>
+
+
+
+    <div class="home">
+
+      <a href="home.html">
+        <img src="css\icons\home.svg" alt="Home" title="Home">
+      </a>
+    </div>
+</body>
+
+</html>

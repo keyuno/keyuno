@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <title>keyuno v0.1.0</title>
+
+</head>
+
+<body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var params = new URLSearchParams(location.search);
+      var link1 = params.get('link1');
+
+      var assetId = params.get('assetId');
+
+      // Set the src attribute of the iframe1 element
+      document.querySelector('#iframe1').src = 'filename.html';
+      document.querySelector('#iframe1').style.height = '98%';
+      document.querySelector('#iframe1').style.width = '60%';
+      document.querySelector('#iframe1').style.top = "0";
+      document.querySelector('#iframe1').style.left = "0";
+      document.querySelector('#iframe1').style.borderTop = "none";
+      document.querySelector('#iframe1').style.borderBottom = "none";
+      document.querySelector('#iframe1').style.borderLeft = "none";
+      document.querySelector('#iframe1').style.position = "absolute";
+      // Make the API call to the Xchain API
+      fetch(`https://xchain.io/api/issuances/${assetId}`)
+        .then(response => response.json())
+        .then(data => {
+          // Create the slides container
+          const slidesContainer = document.createElement("div");
+          slidesContainer.style.position = "absolute";
+
+          const propertyNameMap = {
+            asset: 'NFT ID',
+            description: 'Description',
+            timestamp: 'Timestamp',
+            block_index: 'Block',
+            locked: 'Locked',
+            transfer: 'Transfer',
+          };
+          const propertiesToExclude = ['fee_paid', 'source', 'tx_hash', 'quantity', 'tx_index', 'status',
+            'issuer'
+          ];
+          const keys = ['asset', 'description', 'timestamp', 'locked', 'transfer', 'block_index'];
+          data.data.reverse().forEach(function (issuance, i) {
+            // Create the slide
+            const slide = document.createElement("div");
+            slide.style.display = "none";
+            slide.style.position = "fixed";
+            slide.style.top = "2%";
+            slide.style.left = "61%";
+            slide.style.lineHeight = "0.8";
+
+
+            // Insert the data into the slide
+            keys.forEach(key => {
+              if (!propertiesToExclude.includes(key) && issuance[key] !== null && issuance[key] !==
+                undefined) {
+                const row = document.createElement("p");
+                row.textContent = `${propertyNameMap[key] || key}: `;
+
+                if (key === 'timestamp') {
+                  // convert the Unix timestamp into a regular time
+                  const timestamp = issuance['timestamp'];
+                  const date = new Date(timestamp *
+                    1000); // multiply by 1000 to convert seconds to milliseconds
+                  const regularTime = date.toLocaleString(); // convert to a readable format
+                  row.textContent += regularTime;
+                } else if (key === 'locked') {
+                  // convert the word "true" to "Yes" and the word "false" to "No"
+                  row.textContent += issuance[key] ? 'Yes' : 'No';
+
+                } else if (key === 'transfer') {
+                  // convert the word "true" to "Yes" and the word "false" to "No"
+                  row.textContent += issuance[key] ? 'Yes' : 'No';
+
+                } else {
+                  row.textContent += issuance[key];
+                }
+                slide.appendChild(row);
+              }
+            });
+
+            // Add a row for ipfs
+            const linkRow = document.createElement("tr");
+            const linkKeyColumn = document.createElement("td");
+            linkKeyColumn.textContent = 'IPFS:';
+            const linkValueColumn = document.createElement("td");
+            const cid = localStorage.getItem("CIDHERE");
+            linkValueColumn.textContent = cid;
+            linkRow.appendChild(linkKeyColumn);
+            linkRow.appendChild(linkValueColumn);
+            slide.appendChild(linkRow);
+            // Add an empty row
+            const linkRow1 = document.createElement("tr");
+            const linkKeyColumn1 = document.createElement("td");
+            linkKeyColumn1.textContent = '.';
+            linkKeyColumn1.style.color = "white";
+            const linkValueColumn1 = document.createElement("td");
+            linkRow1.appendChild(linkKeyColumn1);
+            linkRow1.appendChild(linkValueColumn1);
+            slide.appendChild(linkRow1);
+
+            // Insert the slide into the slides container
+            slidesContainer.appendChild(slide);
+
+            // make an additional API call to the Xchain API to get the owner of the asset
+
+            fetch(`https://xchain.io/api/asset/${assetId}`)
+              .then(response => response.json())
+              .then(data => {
+                const owner = data['owner'];
+                const ownerRow = document.createElement("tr");
+                const ownerKeyColumn = document.createElement("td");
+                ownerKeyColumn.textContent = 'Owner:';
+                const ownerValueColumn = document.createElement("td");
+                ownerValueColumn.textContent = owner;
+                ownerRow.appendChild(ownerKeyColumn);
+                ownerRow.appendChild(ownerValueColumn);
+                slide.appendChild(ownerRow);
+
+
+              });
+          });
+
+
+
+          // Show the first slide
+          slidesContainer.querySelectorAll("div")[0].style.display = "block";
+          slidesContainer.querySelectorAll("div")[0].classList.add("current-slide");
+          const slideIndicatorsContainer = document.createElement("ul");
+          slideIndicatorsContainer.style.display = "absolute";
+          slideIndicatorsContainer.style.listStyleType = "none";
+          slideIndicatorsContainer.style.margin = "0";
+          slideIndicatorsContainer.style.padding = "0";
+          slideIndicatorsContainer.style.position = "fixed";
+          slideIndicatorsContainer.style.left = "97%";
+          slideIndicatorsContainer.style.top = "3%";
+
+
+          data.data.forEach((issuance, i) => {
+            const slideIndicator = document.createElement("li");
+            slideIndicator.style.border = "1px solid black";
+            slideIndicator.style.borderRadius = "50%";
+            slideIndicator.style.width = "12px";
+            slideIndicator.style.height = "12px";
+            slideIndicator.style.margin = "12px";
+            slideIndicator.style.cursor = "pointer";
+
+            if (i === 0) {
+              slideIndicator.style.backgroundColor = "black";
+            }
+            slideIndicator.addEventListener("click", () => {
+              const currentSlide = slidesContainer.querySelector(".current-slide");
+              currentSlide.classList.remove("current-slide");
+              currentSlide.style.display = "none";
+              const selectedSlide = slidesContainer.querySelectorAll("div")[i];
+              selectedSlide.classList.add("current-slide");
+              selectedSlide.style.display = "block";
+              slideIndicatorsContainer.querySelectorAll("li").forEach(li => {
+                li.style.backgroundColor = "white";
+              });
+              slideIndicator.style.backgroundColor = "black";
+            });
+            slideIndicatorsContainer.appendChild(slideIndicator);
+          });
+          slidesContainer.appendChild(slideIndicatorsContainer);
+          // Insert the slides container into the DOM
+          document.body.appendChild(slidesContainer);
+        });
+    });
+  </script>
+
+
+
+
+  <!-- HTML -->
+  <div id="node-1">
+    <iframe id="iframe1" src=""></iframe>
+  </div>
+
+</body>
+
+</html>

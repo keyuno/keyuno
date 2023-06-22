@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>keyuno v0.1.0</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/bitcore.min.js"></script>
+  <script src="js/seedrandom.min.js"></script>
+  <script src="js/passphrase.js"></script>
+  <script src="js/mnemonic.js"></script>
+
+</head>
+
+<body>
+  <!-- HTML -->
+  <input type="text" value="" id="pass">
+
+  <a href="home.html" class="login" onclick="storeInput();"><b>LOG IN</b></a>
+
+  <script>
+    // Declare NEW_ADDRESS_INDEX as a constant to avoid accidental modification
+    const NEW_ADDRESS_INDEX = 0;
+
+    function displayInput() {
+      // Set the value of the input element to a new passphrase
+      document.getElementById('pass').value = newPassphrase();
+    }
+
+    function storeInput() {
+      // Get the input element
+      var input = document.getElementById('pass');
+
+      // Store the passphrase in local storage
+      localStorage.setItem('passphrase', input.value);
+
+      // Check if the passphrase is valid
+      if (isValidPP(input.value)) {
+        // Generate an array of addresses
+        var addr_list = genAddr(input.value, NEW_ADDRESS_INDEX + 10);
+
+        // Convert the array to a JSON string
+        const addressesJson = JSON.stringify(addr_list);
+
+        // Store the addresses in local storage
+        localStorage.setItem('addresses', addressesJson);
+      }
+    }
+
+    // Call displayInput() to set the initial value of the input element
+    displayInput();
+  </script>
+
+</body>
+
+</html>

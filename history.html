@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline';"
+    />
+    <title>keyuno v0.1.0</title>
+    <script type="text/javascript" src="js\settings.js"></script>
+    <script type="text/javascript" src="js\recieve.js"></script>
+
+    <link rel="stylesheet" href="css\c.css" />
+  </head>
+  <body>
+    <style></style>
+
+    <!-- Search Map of Knowledge -->
+
+    <input type="text" class="search" placeholder="Search" id="search-input" />
+    <div class="searchbutton">
+      <a href="#" onclick="searchURL();">
+        <img src="css\icons\search.svg" alt="" />
+      </a>
+    </div>
+
+    <script>
+      function searchURL() {
+        const searchTerm = document
+          .querySelector("#search-input")
+          .value.toLowerCase();
+        window.open(`map.html?search=${searchTerm}`, "_self");
+
+        // Add event listener for when the map.html page finishes loading
+        window.addEventListener("load", function () {
+          // Call the searchURL function in the search.js file
+          searchURL();
+        });
+      }
+
+      // add event listener for keydown event on text input
+      document
+        .querySelector("#search-input")
+        .addEventListener("keydown", function (event) {
+          // check if key pressed was Enter
+          if (event.key === "Enter") {
+            // call searchURL function
+            searchURL();
+          }
+        });
+    </script>
+
+    <!-- Side bar -->
+
+    <div class="side-bar">
+      <div class="menu">
+        <div class="item"><a href="balance.html">BALANCE</a></div>
+        <div class="item"><a href="sendbtc.html">SEND</a></div>
+        <div class="item">
+          <a href="history.html" onclick="location.reload();"><b>HISTORY</b></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="latest-address">
+      <p>
+        <b>Address: </b><span id="address1" onclick="storeAddress()"></span>
+      </p>
+    </div>
+
+    <div class="contain">
+      <div class="co">
+        <ul id="myList"></ul>
+      </div>
+    </div>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <td class="info bold" width="130">Type:</td>
+          <td id="tx-type"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Asset:</td>
+          <td id="asset"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Description:</td>
+          <td id="description"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Timestamp:</td>
+          <td id="timestamp"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Destination:</td>
+          <td id="destination"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Source:</td>
+          <td id="source"></td>
+        </tr>
+        <tr>
+          <td class="info bold" width="130">Tx-Hash:</td>
+          <td id="tx-hash"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Block #:</td>
+          <td id="block"></td>
+        </tr>
+        <tr>
+          <td class="info bold">Quantity:</td>
+          <td id="quantity"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table>
+      <tbody id="data-output"></tbody>
+    </table>
+    <div class="containingarrows">
+      <div class="arrowup">
+        <a id="prev" onClick="prev()">
+          <img src="css\icons\arrow_drop_up.svg" alt="up"  class="icon1" />
+        </a>
+      </div>
+      <div class="arrowdown">
+        <a id="next" onClick="next()">
+          <img src="css\icons\arrow_drop_down.svg" alt="down" class="icon1" />
+        </a>
+      </div>
+    </div>
+
+    <script>
+      var address = localStorage.getItem("youraddress");
+      document.querySelector("#address1").textContent = address;
+
+      let currentIndex = 0;
+      const numToShow = 4;
+
+      function prev() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          list.children[currentIndex].click();
+        }
+      }
+
+      function next() {
+        if (currentIndex < list.children.length - 1) {
+          currentIndex++;
+          list.children[currentIndex].click();
+        }
+      }
+      const list = document.getElementById("myList");
+
+      function showLi() {
+        const startIndex = currentIndex - (currentIndex % numToShow);
+        for (let i = 0; i < list.children.length; i++) {
+          if (i >= startIndex && i < startIndex + numToShow) {
+            list.children[i].style.display = "block";
+          } else {
+            list.children[i].style.display = "none";
+          }
+        }
+      }
+      fetch(`https://xchain.io/api/history/${address}`)
+        .then((response) => response.json())
+        .then((data) => {
+          data.data.forEach((item) => {
+            const dateString = new Date(item.timestamp * 1000)
+              .toString()
+              .split(" ")
+              .slice(1, 5)
+              .join(" ");
+            const tx = item.tx_type;
+            const li = document.createElement("li");
+            li.innerText = tx + "\n" + dateString;
+
+            li.addEventListener("click", () => {
+              document.querySelector("#tx-type").innerText = item.tx_type;
+              document.querySelector("#asset").innerText = item.asset
+                ? item.asset
+                : "";
+              document.querySelector("#description").innerText =
+                item.description ? item.description : "";
+              document.querySelector("#timestamp").innerText = dateString;
+              document.querySelector("#destination").innerText =
+                item.destination ? item.destination : "";
+              document.querySelector("#tx-hash").innerText = item.tx_hash;
+              document.querySelector("#block").innerText = item.block_index;
+              document.querySelector("#source").innerText = item.source
+                ? item.source
+                : "";
+              document.querySelector("#quantity").innerText = item.quantity
+                ? item.quantity
+                : "";
+            });
+
+            // Add event listener to toggle active class on click
+            li.addEventListener("click", (e) => {
+              // Remove active class from all list items
+              for (let i = 0; i < list.children.length; i++) {
+                list.children[i].classList.remove("active");
+              }
+              e.currentTarget.classList.toggle("active");
+              currentIndex = Array.from(list.children).indexOf(e.currentTarget);
+              showLi();
+            });
+
+            // Append the list item to the unordered list
+            list.appendChild(li);
+          });
+          showLi();
+          document.querySelector("#myList li:first-child").click();
+        });
+
+      function storeAddress() {
+        // Get the data related to the "latest-address" element
+        var latestAddress = document.getElementById("address1").innerHTML;
+
+        yourAddress();
+      }
+
+      function sendAddress() {
+        // Get the data related to the "latest-address" element
+        var latestAddress = document.getElementById("latest-address").innerHTML;
+
+        // Store the data in local storage under the key "youraddress"
+        localStorage.setItem("youraddress", latestAddress);
+      }
+    </script>
+
+    <script></script>
+
+    <hr />
+
+    <div class="log-out-copy">
+      <a href="index.html" onclick="localStorage.clear();">
+        <img src="css\icons\logout.svg" alt="Log Out" title="Log Out" />
+      </a>
+    </div>
+
+    <div class="settings">
+      <a href="#" onclick="openSettings()">
+        <img src="css\icons\setting.svg" alt="Settings" title="Settings" />
+      </a>
+    </div>
+
+    <div class="home">
+      <a href="home.html">
+        <img src="css\icons\home.svg" alt="Home" title="Home" />
+      </a>
+    </div>
+  </body>
+</html>

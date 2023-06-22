@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+  <title>keyuno v0.1.0</title>
+
+  <script>
+    var $ = jQuery = require("jquery")
+  </script>
+
+  <link href="node_modules/summernote/dist/summernote-lite.css" rel="stylesheet">
+  <script src="node_modules/summernote/dist/summernote-lite.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+  <div id="summernote"></div>
+  <div class="preview" ng-show="item == 'preview'">
+
+    <script>
+      $('#summernote').summernote({
+        toolbar: [
+          ['style', ['style']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['font', ['bold', 'underline']],
+        ],
+        height: 500, // set editor height
+        minHeight: null, // set minimum height of editor
+        maxHeight: null, // set maximum height of editor
+        focus: true
+      });
+
+
+      function myContent() {
+        var fs = require('fs');
+        var markupStr = $('#summernote').summernote('code');
+        fs.writeFile("filename.html", markupStr, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("File succesfully saved to disk.");
+        });
+
+      }
+
+      const {
+        ipcRenderer
+      } = require('electron');
+      var button = document.createElement('button');
+      button.textContent = 'Open';
+      button.addEventListener('click', () => {
+        ipcRenderer.send('ABCD');
+      }, false);
+      document.body.appendChild(button)
+
+      ipcRenderer.on('mainprocess-response', (event, arg) => {
+        console.log(arg);
+      });
+      ipcRenderer.on('B', (event, arg) => {
+        console.log(arg);
+      });
+
+      function retrieveFile() {
+        ipcRenderer.send("file-event", {
+          channel: "retrieve-file"
+        });
+      }
+    </script>
+    <button id="random" onclick="myContent()">create</button>
+    <button id="random1" onclick="retrieveFile()">retrieve</button>
+
+    <p><a href="filename1.html">HTML</a></p>
+
+
+</body>
+
+</html>

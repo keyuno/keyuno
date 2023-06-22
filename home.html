@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <title>keyuno v0.1.0</title>
+
+  <!-- CSS stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- JavaScript file for settings page -->
+  <script type="text/javascript" src="js/settings.js"></script>
+</head>
+
+<body>
+
+  <!-- Search bar -->
+  <input type="text" class="search" placeholder="Search" id="search-input">
+  <div class="searchbutton">
+    <a href="#" onclick="searchURL();">
+      <img src="css/icons/search.svg" alt="">
+    </a>
+  </div>
+
+  <script>
+    function searchURL() {
+      // Get search term from search input
+      const searchTerm = document.querySelector('#search-input').value.toLowerCase();
+
+      // Navigate to map.html with search term as query parameter
+      window.open(`map.html?search=${searchTerm}`, '_self');
+
+      // Add event listener for when the map.html page finishes loading
+      window.addEventListener('load', function () {
+        // Call the searchURL function in the search.js file
+        searchURL();
+      });
+    }
+
+    // Add event listener for keydown event on search input
+    document.querySelector('#search-input').addEventListener('keydown', function (event) {
+      // Check if key pressed was Enter
+      if (event.key === 'Enter') {
+        // Call searchURL function
+        searchURL();
+      }
+    });
+  </script>
+
+  <!-- Icons for different pages -->
+  <div class="wallet">
+    <a href="balance.html">
+      <img src="css/icons/wallet.svg" alt="Wallet" title="Wallet">
+    </a>
+  </div>
+
+  <div class="knowledge">
+    <a href="map.html">
+      <img src="css/icons/map.svg" alt="Knowledge Map" title="Knowledge Map">
+    </a>
+  </div>
+
+  <div class="create">
+    <a href="create.html">
+      <img src="css/icons/create.svg" alt="Create NFT" title="Create NFT">
+    </a>
+  </div>
+
+  <!-- Log out and settings icons -->
+  <hr>
+  <div class="log-out">
+    <a href="index.html" onclick="localStorage.clear();">
+      <img src="css/icons/logout.svg" alt="Log Out" title="Log Out">
+    </a>
+  </div>
+
+  <div class="settings-copy">
+    <a href="#" onclick="openSettings()">
+      <img src="css/icons/setting.svg" alt="Settings" title="Settings">
+    </a>
+  </div>
+
+
+
+</body>
+
+</html>

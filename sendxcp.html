@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <title>keyuno v0.1.0</title>
+
+
+  <script src="js/jquery-3.6.3.min.js"></script>
+
+  <script type="text/javascript" src="js/settings.js"></script>
+  <script type="text/javascript" src="js/recieve.js"></script>
+
+  <script src="js/search.js"></script>
+
+
+
+  <script src="js/lib/mnemonic-1.1.0.js"></script>
+  <script src="js/lib/aes.js"></script>
+  <script src="js/lib/biginteger.js"></script>
+  <script src="js/xcp-js/util.js"></script>
+  <script src="js/xcp-js/transact.js"></script>
+  <script src="js/xcp-js/issuance.js"></script>
+  <script src="js/lib/lozad.min.js"></script>
+  <script src="js/lib/buffer.js"></script>
+  <script src="js/lib/bitcoinjs-lib.js"></script>
+  <script src="js/lib/bitcoinjs-message.js"></script>
+  <script src="js/xcp-js/bitcore/bitcore.min.js"></script>
+
+  <script src="js/btc.js"></script>
+  <script src="js/passphrase.js"></script>
+  <script src="js/script1.js"></script>
+
+
+
+  <link rel="stylesheet" href="css\style.css">
+
+</head>
+
+<body>
+
+
+  <form id="my-form">
+    <label for="send-to">SEND TO:</label>
+    <input type="text" id="send-to" name="send-to" class="form-input"
+      placeholder="Click to paste address from clipboard" required>
+
+    <label for="available">AVAILABLE:</label>
+    <input type="text" id="available" name="nft-id" class="form-input" required readonly>
+
+    <label for="amount">AMOUNT:</label>
+    <input type="text" id="amount" name="AMOUNT" class="form-input">
+  </form>
+
+  <script>
+    const sendToInput = document.getElementById('send-to');
+
+    sendToInput.addEventListener('click', () => {
+      navigator.clipboard.readText()
+        .then(text => {
+          sendToInput.value = text;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  </script>
+
+
+
+
+  <!-- Side bar -->
+
+  <div class="side-bar">
+    <div class="menu">
+      <div class="item"><a href="balance.html">BALANCE</a></div>
+      <div class="item"><a href="send.html" onclick="location.reload();"><b>SEND</b></a></div>
+
+      <div class="item"><a href="history.html">HISTORY</a></div>
+    </div>
+  </div>
+
+  <!-- Balance buttons -->
+
+  <div id="tab-bar">
+    <button id="btc-btn">BTC</button>
+    <button id="xcp-btn">XCP</button>
+    <button id="umok-btn">UMOK</button>
+    <button id="nft-btn">NFT</button>
+  </div>
+
+  <!-- Search Map of Knowledge -->
+
+  <input type="text" class="search" placeholder="Search" id="search-input">
+  <div class="searchbutton">
+    <a href="#" onclick="searchURL();">
+      <img src="css\icons\search.svg" alt="">
+    </a>
+  </div>
+
+
+  <div class="send-address">
+
+    <p><b>Address: </b><span class="address1" onclick="yourAddress()" style="cursor: pointer;"></span></p>
+
+  </div>
+
+  <button class="send-button" id="send-button" onclick="sendXCPTransaction()">SEND</button>
+
+
+  <div class="box1">
+    <p id="text1"></p>
+  </div>
+  </div>
+  <script>
+    function searchURL() {
+      const searchTerm = document.querySelector('#search-input').value.toLowerCase();
+      window.open(`map.html?search=${searchTerm}`, '_self');
+
+      // Add event listener for when the map.html page finishes loading
+      window.addEventListener('load', function () {
+        // Call the searchURL function in the search.js file
+        searchURL();
+      });
+    }
+
+    // add event listener for keydown event on text input
+    document.querySelector('#search-input').addEventListener('keydown', function (event) {
+      // check if key pressed was Enter
+      if (event.key === 'Enter') {
+        // call searchURL function
+        searchURL();
+      }
+    });
+  </script>
+
+  <script>
+    let TX_FEE = localStorage.getItem("TX_FEE") || 0.00003;
+    let MIN_BTC = (parseFloat(TX_FEE) * 4).toFixed(5);
+    let MIN_XCP = 0.0000001;
+    let address = localStorage.getItem('youraddress').toString();
+    document.querySelector('.address1').innerText = address;
+
+
+    const btcBtn = document.getElementById("btc-btn");
+    const xcpBtn = document.getElementById("xcp-btn");
+    const umokBtn = document.getElementById("umok-btn");
+    const nftBtn = document.getElementById("nft-btn");
+
+    xcpBtn.classList.add("active-tab");
+
+
+    btcBtn.addEventListener("click", function () {
+      xcpBtn.classList.remove("active-tab");
+      umokBtn.classList.remove("active-tab");
+      nftBtn.classList.remove("active-tab");
+      btcBtn.classList.add("active-tab");
+      window.location.href = "sendbtc.html";
+
+    });
+
+    xcpBtn.addEventListener("click", function () {
+      btcBtn.classList.remove("active-tab");
+      umokBtn.classList.remove("active-tab");
+      nftBtn.classList.remove("active-tab");
+      xcpBtn.classList.add("active-tab");
+      window.location.href = "sendxcp.html";
+
+    });
+
+    umokBtn.addEventListener("click", function () {
+      btcBtn.classList.remove("active-tab");
+      xcpBtn.classList.remove("active-tab");
+      nftBtn.classList.remove("active-tab");
+      umokBtn.classList.add("active-tab");
+      window.location.href = "sendumok.html";
+
+    });
+
+
+    nftBtn.addEventListener("click", function () {
+
+      btcBtn.classList.remove("active-tab");
+      xcpBtn.classList.remove("active-tab");
+      umokBtn.classList.remove("active-tab");
+      nftBtn.classList.add("active-tab");
+      window.location.href = "transfernft.html";
+
+
+    });
+
+    const text = document.getElementById("text1");
+
+
+    async function myBalanceXCP() {
+      try {
+        const response = await fetch(`https://xchain.io/api/address/${address}`);
+        const data = await response.json();
+        if (data.xcp_balance === "0.00000000") {
+          document.getElementById('available').value = "0";
+          return 0;
+        } else {
+          const xcpBalance = parseFloat(data.xcp_balance);
+
+          document.getElementById('available').value = xcpBalance.toFixed(8);
+          return xcpBalance;
+        }
+
+      } catch (error) {
+        console.error(error);
+        throw new Error("Unable to fetch balance from xchain.io API");
+      }
+    }
+
+
+    myBalanceXCP()
+
+    async function isValidXCPTransaction(sendTo, amount, address) {
+      const balance_XCP = await myBalanceXCP(address);
+
+      if (amount === "" || isNaN(amount)) {
+        console.log("Cannot send. Amount is not a number or is empty.");
+        text.innerHTML = `Cannot send. Amount is not a number.`;
+        return false;
+      }
+
+      if (balance_XCP < MIN_XCP) {
+        console.log(`Not enough XCP in your balance. Minimum required balance: ${MIN_XCP} XCP.`);
+        text.innerHTML = `Not enough XCP in your balance. Minimum required balance: ${MIN_XCP} XCP.`;
+        return false;
+      }
+
+      if (amount > balance_XCP) {
+        console.log("Cannot send. Amount selected is more than the balance.");
+        text.innerHTML = `Cannot send. Amount selected is more than the balance.`;
+        return false;
+      }
+
+      if (sendTo.length < 26 || sendTo.length > 34 || sendTo[0] !== "1") {
+        console.log("Invalid XCP address.");
+        text.innerHTML = `Invalid BTC address.`;
+        return false;
+      }
+
+      return true;
+    }
+
+
+
+    async function sendXCPTransaction() {
+      var add_from = address;
+      var sendTo = document.getElementById('send-to').value;
+      var amount = document.getElementById('amount').value;
+      const btc_total = "0.00005470";
+      var transfee = TX_FEE;
+      var asset = "XCP";
+      var mnemonic = localStorage.getItem('passphrase');
+
+      // Disable the button
+      document.getElementById('send-button').disabled = true;
+
+      // Wait for 10 seconds
+      setTimeout(() => {
+        // Enable the button and update text1
+        document.getElementById('send-button').disabled = false;
+
+      }, 10000);
+      // Check if the transaction is valid
+      const isValidTransaction = await isValidXCPTransaction(sendTo, amount);
+
+      if (isValidTransaction) {
+        sendXCP_opreturn_blockchaininfo(add_from, sendTo, asset, amount, btc_total, transfee, mnemonic);
+        console.log("Sending Transaction");
+        text.textContent = "Sending transaction. Please wait.";
+        setTimeout(checkMempool, 10000);
+
+      }
+    }
+
+
+
+
+    async function checkMempool() {
+      var address = localStorage.getItem('youraddress');
+      const response = await fetch(`https://xchain.io/api/mempool/${address}`);
+      const data = await response.json();
+      const isMempoolEmpty = data.data.length === 0;
+      if (!isMempoolEmpty) {
+        console.log("Mempool is not empty. Checking again in 1 minute...");
+        setTimeout(checkMempool, 60000);
+
+      } else {
+        console.log("Mempool is empty. ");
+        text.textContent = "Success.";
+        document.getElementById("my-form").reset();
+        myBalanceXCP()
+
+      }
+    }
+  </script>
+</body>
+
+
+<hr>
+
+<div class="log-out-copy">
+  <a href="index.html" onclick="localStorage.clear();">
+    <img src="css\icons\logout.svg" alt="Log Out" title="Log Out">
+  </a>
+</div>
+
+<div class="settings">
+  <a href="#" onclick="openSettings()">
+    <img src="css\icons\setting.svg" alt="Settings" title="Settings">
+  </a>
+</div>
+
+
+
+<div class="home">
+
+  <a href="home.html">
+    <img src="css\icons\home.svg" alt="Home" title="Home">
+  </a>
+</div>
+
+</html>

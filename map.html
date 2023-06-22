@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <title>keyuno v0.1.0</title>
+  <script type="text/javascript" src="node_modules\vis-network\dist\vis-network.min.js"></script>
+  <script type="text/javascript" src="js/nodes.js"></script>
+  <script type="text/javascript" src="js/settings.js"></script>
+  <script src="js/search.js"></script>
+
+  <link rel="stylesheet" href="css\style.css">
+
+</head>
+
+
+
+<body>
+
+  <input type="text" class="search" placeholder="Search" id="search-input">
+  <div class="searchbutton">
+    <a href="#" onclick="searchURL();">
+      <img src="css\icons\search.svg" alt="">
+    </a>
+  </div>
+
+
+
+  <script>
+    // add event listener for keydown event on text input
+    document.querySelector('#search-input').addEventListener('keydown', function (event) {
+      // check if key pressed was Enter
+      if (event.key === 'Enter') {
+        // call searchURL function
+        searchURL();
+      }
+    });
+  </script>
+
+
+  <div id="mynetwork"></div>
+
+
+  <script type="text/javascript">
+    // create a network
+    var container = document.getElementById("mynetwork");
+    var data = {
+      nodes: nodes,
+      edges: edges,
+    };
+    var options = {
+      nodes: {
+        shape: "dot",
+        size: 28,
+        font: {
+          size: 14,
+          color: 'black'
+        },
+        borderWidth: 0.1,
+        shadow: true,
+        color: {
+          background: 'white',
+          highlight: {
+            background: 'white'
+          },
+          border: '#de6de8',
+        },
+      },
+      edges: {
+        width: 0.7,
+      },
+    };
+    var network = new vis.Network(container, data, options);
+    network.once('stabilized', function () {
+
+    });
+    const params = new URLSearchParams(window.location.search);
+    const searchTerm = params.get('search');
+
+    network.unselectAll();
+
+    for (var i = 0; i < allNodes.length; i++) {
+      if (allNodes[i].search.indexOf(searchTerm) >= 0 && searchTerm != '') {
+        network.selectNodes([allNodes[i].id]);
+        allNodes[i].color = {
+          background: 'black',
+          highlight: {
+            background: 'black',
+          },
+        };
+      } else {
+        allNodes[i].color = {
+          background: 'white',
+          highlight: {
+            background: 'white'
+          },
+        };
+      }
+    }
+    data.nodes.update(allNodes);
+    var scaleOption = {
+      scale: 1
+    };
+    network.moveTo(scaleOption);
+
+    network.addEventListener("doubleClick", function (properties) {
+      if (!properties.nodes.length) return;
+
+      // Create the new window
+      const newWindow = window.open("", "", "width=1400,height=800");
+
+      newWindow.document.body.style.paddingTop = "30px";
+      newWindow.document.body.style.display = "flex";
+
+      var node = nodes.get(properties.nodes[0]);
+      newWindow.location.href = node.url;
+
+      // Set the IPFS CID
+      const cid = node.cid;
+      
+      // Store the CID in local storage
+      localStorage.setItem("CIDHERE", cid);
+
+
+      // Send the message to retrieve the HTML content using IPC
+      ipcRenderer.send('retrieve-message', cid);
+
+
+
+      // Read the file content from the retrieved message
+      function readFile(callback) {
+        fs.readFile('filename.html', 'utf8', function (err, data) {
+          if (err) {
+            console.log(err);
+          } else {
+            callback(data);
+          }
+        });
+      }
+
+
+    });
+
+
+
+
+
+    network.addEventListener('select', function (properties) {
+      var selectedNodeId = properties.nodes[0];
+      for (var i = 0; i < allNodes.length; i++) {
+        if (allNodes[i].id == selectedNodeId) {
+          allNodes[i].color = {
+            background: 'white',
+            highlight: {
+              background: 'black'
+            },
+          };
+        } else {
+          allNodes[i].color = {
+            background: 'white',
+            highlight: {
+              background: 'black'
+            },
+          };
+        }
+      }
+      data.nodes.update(allNodes);
+    });
+  </script>
+
+
+
+  <hr>
+
+  <div class="log-out-copy">
+    <a href="index.html" onclick="localStorage.clear();">
+      <img src="css\icons\logout.svg" alt="Log Out" title="Log Out">
+    </a>
+  </div>
+
+  <div class="settings">
+    <a href="#" onclick="openSettings()">
+      <img src="css\icons\setting.svg" alt="Settings" title="Settings">
+    </a>
+  </div>
+
+
+
+  <div class="home">
+
+    <a href="home.html">
+      <img src="css\icons\home.svg" alt="Home" title="Home">
+    </a>
+  </div>
+
+
+
+
+</body>
+
+
+</html>
